@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K59D1</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+.container{
+    width: 100%;
+    max-width: 1400px; /* Mở rộng tối đa khung nền để đủ chỗ cho cả 4 cột trên PC */
+    text-align: center;
+}
+
+/* Trang đầu phong bì */
+.screen1{
+    animation: fadeIn 1s ease;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.screen1 h1{
+    font-size: clamp(32px, 8vw, 42px);
+    margin-bottom: 60px;
+    font-weight: normal;
+}
+
+.screen1 p{
+    font-size: clamp(22px, 5vw, 34px);
+    font-weight: bold;
+    color: #333;
+}
+
+/* Phong bì */
+.envelope{
+    width: 220px;
+    height: 150px;
+    background: #ff5b6e;
+    margin: 50px auto;
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.envelope:hover {
+    transform: scale(1.05);
+}
+
+.envelope::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:0;
+    height:0;
+    border-left:110px solid transparent;
+    border-right:110px solid transparent;
+    border-top:75px solid #ff7b8a;
+}
+
+/* GIAO DIỆN CHÍNH SAU KHI MỞ THƯ (BẬT HIỂN THỊ 4 CỘT TRÊN PC) */
+.main-content {
+    display: none;
+    gap: 20px; /* Giảm gap một chút để các cột nằm vừa vặn */
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    animation: fadeIn 1s ease;
+}
+
+.show-layout {
+    display: flex;
+    flex-direction: row; 
+}
+
+/* KHỐI ĐĨA THAN (CỘT 1) */
+.music-box {
+    flex: 1;
+    max-width: 260px; /* Thu nhỏ bớt chiều rộng đĩa nhạc để nhường chỗ cho dải ảnh */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    padding: 20px 15px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 20px;
+}
+
+/* Khung chứa đĩa nhạc */
+.disc-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 25px;
+}
+
+/* Tạo hình đĩa than đen với các đường rãnh nhạc bằng CSS Gradient */
+.cd-disc {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    background: radial-gradient(circle,  
+        transparent 0%, transparent 34%,  
+        #0d0d0d 34%, #1a1a1a 35%, #0a0a0a 37%, #262626 39%, #0d0d0d 41%,  
+        #1f1f1f 43%, #0a0a0a 46%, #2b2b2b 48%, #0d0d0d 51%, #1f1f1f 53%,  
+        #0a0a0a 56%, #262626 59%, #0d0d0d 62%, #1f1f1f 65%, #0a0a0a 69%,  
+        #2b2b2b 72%, #0d0d0d 75%, #1a1a1a 78%, #0a0a0a 82%, #262626 85%,  
+        #0d0d0d 89%, #1f1f1f 93%, #0a0a0a 97%, #050505 100%);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    animation: rotateDisc 15s linear infinite;
+    animation-play-state: paused;  
+}
+
+/* HÌNH LỚP TỰ ĐỘNG LỒNG VÀO GIỮA ĐĨA THAN */
+.cd-disc::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35%;
+    height: 35%;
+    border-radius: 50%;
+    background-image: url('image_ce1e2b.jpg'); 
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #000;
+}
+
+/* Lỗ tròn nhỏ cốt lõi ở chính giữa đĩa */
+.cd-disc::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: #f5f5f5;
+    border-radius: 50%;
+    border: 3px solid #000;
+    z-index: 2;
+}
+
+audio {
+    width: 100%;
+    outline: none;
+}
+
+/* KHỐI LÁ THƯ (CỘT 3) */
+.letter{
+    flex: 2;
+    background: #e53935;
+    color: white;
+    padding: clamp(20px, 4vw, 35px);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(229, 57, 53, 0.3);
+    text-align: left;
+}
+
+.letter h2{
+    margin-bottom: 20px;
+    font-size: clamp(22px, 4vw, 28px);
+    text-align: center;
+}
+
+.letter p{
+    line-height: 1.8;
+    font-size: clamp(15px, 2.3vw, 17px);
+    text-align: justify;
+}
+
+/* DẢI ẢNH CHUNG (ÁP DỤNG CHO CẢ HAI BÊN TRÁI & PHẢI) */
+.image-sidebar, .image-sidebar-left {
+    flex: 0.7;
+    max-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 20px; /* Ghim cố định khi cuộn chuột */
+}
+
+.image-sidebar h3, .image-sidebar-left h3 {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Khung bọc từng ảnh nhỏ */
+.thumb-box {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.thumb-box:hover {
+    transform: scale(1.05);
+    border-color: #e53935;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.thumb-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* KHUNG HIỂN THỊ PHÓNG TO ẢNH (LIGHTBOX MÀN HÌNH MỜ) */
+.lightbox {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-img {
+    max-width: 90%;
+    max-height: 85%;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.lightbox.active .lightbox-img {
+    transform: scale(1);
+}
+
+/* Nút đóng hình chữ X */
+.close-lightbox {
+    position: absolute;
+    top: 20px; right: 30px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+.close-lightbox:hover { color: #ff5b6e; }
+
+/* CÁC ĐỊNH NGHĨA ANIMATION */
+.hide{ display: none !important; }
+@keyframes rotateDisc { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes fadeIn{ from{ opacity: 0; transform: translateY(30px); } to{ opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE CHO ĐIỆN THOẠI & MÁY TÍNH BẢNG (TỰ ĐỘNG CHUYỂN DẢI NẰM NGANG) */
+@media (max-width: 1100px) {
+    .show-layout {
+        flex-direction: column; 
+        align-items: center;
+        gap: 25px;
+    }
+    
+    .music-box, .image-sidebar, .image-sidebar-left {
+        max-width: 100%;
+        width: 100%;
+        position: static; 
+    }
+
+    .image-sidebar, .image-sidebar-left {
+        flex-direction: row; 
+        overflow-x: auto; 
+        padding: 15px;
+    }
+
+    .image-sidebar h3, .image-sidebar-left h3 { display: none; }
+
+    .thumb-box {
+        width: 120px;
+        flex-shrink: 0;
+    }
+
+    .disc-wrapper { width: 210px; height: 210px; }
+    .letter { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="screen1" id="screen1">
+        <h1>hey!</h1>
+        <p>BẤM ĐỂ TIẾP TỤC!!!!</p>
+        <div class="envelope" onclick="openLetter()"></div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        
+        <div class="music-box">
+            <div class="disc-wrapper">
+                <div class="cd-disc" id="cdDisc"></div>
+            </div>
+            <audio id="myAudio" controls autoplay>
+                <source src="https://stream.nct.vn/resa/2512/ed/b3/vnkxtfsqha.mp3?st=TPW8R-AOtY6fPaR3xPbv0w&amp;e=1781508365&amp;a=6&amp;p=0&amp;r=67617e3e2dcb743c38f0ed15ca8a67ce" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ audio.
+            </audio>
+        </div>
+
+        <div class="image-sidebar-left">
+            <h3>Khoảnh khắc</h3>
+            
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-6.fna.fbcdn.net/v/t39.30808-6/719692526_1376661090997302_8953087906629832156_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHk8jwE5LxQXg0eKXzixjNqXB5Ze6MQwTVcHll7oxDBNQVQFRV4yttZR_HWbSKzy8CPii2fnAOrs8ohCYDyT-np&_nc_ohc=gPeF1klMgUQQ7kNvwHL-zBQ&_nc_oc=AdpgvPw1W-owDGk4sk74ycBYIbUFOfQmCfAXZe0zwx7mxHg8SXyQpUHwotf6iP_7jaw&_nc_zt=23&_nc_ht=scontent.fhan5-6.fna&_nc_gid=gAuPEyjIS5Tz1RL2S6n7UQ&_nc_ss=7b2a8&oh=00_Af8SCNideM7YwOYMccfrweJ9W1VYI_dcsVNWZujWD21kgw&oe=6A2C6549" alt="Kỷ niệm trái 1">
+            </div>
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t39.30808-6/719585149_1376661057663972_4959414287850014488_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEIUFiqp3dUGI9g0AgvZi9QIOCEuTbDKPcg4IS5NsMo99RTDnu-fzA-BQV_OVpfoTf3QCmI4f4Iz2-fY2oDjVHy&_nc_ohc=chpWT4LvajIQ7kNvwHQrNF9&_nc_oc=AdpqHybHQnCB3mHwAYFtSZpSM3EuSWZUnGGerslVY1JQSCZuDWzO3azt2vz3Td5tCKg&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_gid=7Ba2Ugr9gHBNUcixk3p0jA&_nc_ss=7b2a8&oh=00_Af_N6q6qwxLj0L3Yh6_Ru3DIlzs0gvflZdRaYJzmBw6Kcw&oe=6A2C5EB9" alt="Kỷ niệm trái 2">
+            </div>
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-2.fna.fbcdn.net/v/t39.30808-6/719585881_1376661034330641_8374713229164799646_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG_mwh3kL9EE1HAHUtKIjHWspoSupVmy7WymhK6lWbLtcBQGCRn32261awQXxK4WCv5rTqovE1sry56iEfNvHIs&_nc_ohc=NlSQ57dIaiAQ7kNvwGc1_po&_nc_oc=AdrWaaBgqdSb3XwkGwF9hzmIoOJMLSqNLG4C2UF8fKZ1lX4B_5RVkfN_8tI5qhaQPJI&_nc_zt=23&_nc_ht=scontent.fhan5-2.fna&_nc_gid=iEw4MNbjQ322RyjKrtsT3g&_nc_ss=7b2a8&oh=00_Af-lSzaOdWEv88A-0jnP9IvIARYg8eF--r4zT15Bshk0Pg&oe=6A2C5062" alt="Kỷ niệm trái 3">
+            </div>
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-11.fna.fbcdn.net/v/t39.30808-6/719891869_1376661117663966_8295696490442554412_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx956x1276&ctp=s956x1276&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFh_3aC82drcTTGWiWjiOyP98PMAnPOAY33w8wCc84BjS13NAhQH6m72Gz88gny2iYyb_DadPP2oq-YNA9ejMG3&_nc_ohc=_VXJ89QaKkgQ7kNvwFTNkR5&_nc_oc=AdqFGcmkS8rIQoWqi-_Pm4_As1qy4CO5yK28Sz6oojPVr0uDpU5kPzQMJ9rAM-AI_3k&_nc_zt=23&_nc_ht=scontent.fhan5-11.fna&_nc_gid=YmL2g9zUiOklAgnBSHMlsA&_nc_ss=7b2a8&oh=00_Af_tWfP7t87bkEWHBuHWKmiHBMeG-6K1Jij3J81bkEeMJw&oe=6A2C7368" alt="Kỷ niệm trái 4">
+            </div>
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-6.fna.fbcdn.net/v/t39.30808-6/719519192_1376661140997297_6366817298714908769_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEDOIgoyvb-IYH7bWJ7_FfdWF4Cz2bMLGRYXgLPZswsZNQyOmpBPnZkyRJLxfkVtWj27FfprjX23-A6pTDQCnm2&_nc_ohc=f0plVk4nLBwQ7kNvwGva5UM&_nc_oc=AdolnTjrKQ-90Twqeyd0WFRR7SlZ7VR5P1ARZK0w2-4PQ3H21GU4NIOgpGcYCmL_11Q&_nc_zt=23&_nc_ht=scontent.fhan5-6.fna&_nc_gid=G851ZYMAR42jBVN0haeVjg&_nc_ss=7b2a8&oh=00_Af9bBlwdVD-nytRx6DTvjzLH4cm5DiL6Bk3FpSeUPt6otw&oe=6A2C5041" alt="Kỷ niệm trái 4">
+            </div>
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t39.30808-6/719532415_1376661164330628_1911919030691354638_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFdUIoJ2DEQWR2bUZ_cIg8CjZ2Y6FQGpc-NnZjoVAalz7wRbWZallmfIXki4PFYDFEYloHYbNjpFz7RVTC4nqff&_nc_ohc=aHfe6lVvFBYQ7kNvwFXzo3t&_nc_oc=AdppBZo6Lgk5eSeMoq7X-9RrHhVogB7sHVqZ4cdYPYW1hnJiyPhWztcK1bLOKsBXZ-0&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_gid=y1kcpP26VsVqWwNgTaadgg&_nc_ss=7b2a8&oh=00_Af-Vx2DhW26fMOOH4ngySdcMbFJCliTiLf6A2quUzEj7WA&oe=6A2C7913" alt="Kỷ niệm trái 4">
+            </div>
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-6.fna.fbcdn.net/v/t39.30808-6/720467455_1376661180997293_4979575230039963036_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHGrwcMGmSzEiJlKm47xh_yoKYeuN38PTGgph643fw9MSfrrRlLkoXwMpR2kD1tVtkFbrnVt6sFiBmojqJTg6QO&_nc_ohc=2z2a7xeKx28Q7kNvwE-oAMY&_nc_oc=Adp_bUwAvMvA7Toh2W3EW9r6N-1ENzVhcou2-BG2v0shmKnRzE4jehj4LRfSyszzBNM&_nc_zt=23&_nc_ht=scontent.fhan5-6.fna&_nc_gid=wBO62ZpgxdXBqpPyCc7ZlA&_nc_ss=7b2a8&oh=00_Af-VAFvqVLkPkg5NKq1RLG5aSsrXVUtZVoreSoXw-bZ6ZQ&oe=6A2C6392" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-9.fna.fbcdn.net/v/t1.15752-9/718098598_2162909297612968_310318026490566715_n.jpg?stp=dst-jpg_tt6&cstp=mx2688x4032&ctp=s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFhq9szY_sJps71rwSxmxJeamxJWonkuTNqbElaieS5M6gSI3XXFc6ZH4qhuCwJ_ItoSkIa1Cbpbi3ZsPLsPbCk&_nc_ohc=41j5KCsGgzUQ7kNvwERHrI6&_nc_oc=AdqUAB5xxxGlwRjC2xUkW4j9ZfrChLRyngiJQpCJMKX7xnmSdSBAHGjq1NxD_w0PyE4&_nc_zt=23&_nc_ht=scontent.fhan5-9.fna&_nc_ss=7b2a8&oh=03_Q7cD5gFG2frhfTiXW2vYN1AGL0pNAEOavehK9_63nZH8SPDKow&oe=6A4DF298" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-11.fna.fbcdn.net/v/t1.15752-9/715453867_1009689224914571_2597306783004836584_n.jpg?stp=dst-jpg_tt6&cstp=mx2688x4032&ctp=s2048x2048&_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEcIxP0U1ng_HMZb5O2ndfZEQdRIfzlRkARB1Eh_OVGQJtNTLQuIO7a695v5ztlzIKCHludCCt2ZtJqWttCC7po&_nc_ohc=6Is5BzlnMooQ7kNvwEqtNqa&_nc_oc=AdpG02YmfB_l-O34GTwqvkjjcJ0al-QTB3T_3R3z95X9Z1I7eM4q4bgnuCUxcvJAjg0&_nc_zt=23&_nc_ht=scontent.fhan5-11.fna&_nc_ss=7b2a8&oh=03_Q7cD5gHSOSuGE1-0EDqsScM_LreLAcws6fqsV4xXpdQbBsVsDg&oe=6A4E0771" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-9.fna.fbcdn.net/v/t1.15752-9/713803130_874063161733932_7830110012351128914_n.jpg?stp=dst-jpg_tt6&cstp=mx2690x4035&ctp=s2048x2048&_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEdV55SzVGm4ruH4KgJTskxyRAT0bFBPvvJEBPRsUE--5qqDlqPyer_WIKJiWrSzApC4sk39cai4_quBuNkMv6w&_nc_ohc=Jv5ydjqE_p0Q7kNvwFxRiM_&_nc_oc=Adpe3_g1vpDIfoS_HsDmom2Hh4yXH1YiG7MeZrueZGpsh1qMQfypJlNA1jvl2lzWUYA&_nc_zt=23&_nc_ht=scontent.fhan5-9.fna&_nc_ss=7b2a8&oh=03_Q7cD5gHalb_-NVEFQPRtskCLtn2nDlaj8xKMQiFQ5dXzPeinjg&oe=6A4DECB7" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-11.fna.fbcdn.net/v/t1.15752-9/717005919_1733423101242442_5140201987231103983_n.jpg?stp=dst-jpg_tt6&cstp=mx2688x4032&ctp=s2048x2048&_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHobLGkWIr-5R5_Jfl5QyJoviz7fZY5Vee-LPt9ljlV5wZXsifmOoimDdTDrqYscYk8tqzj9OuxK-gkzglJNAi0&_nc_ohc=liBH59Jw3hcQ7kNvwEGSLTi&_nc_oc=Adol2VoAmF-05S9-L5kuVLvUXubCBOpJiL3fZaU55P09-13h8IF9x-tjr-Qg0sBnKKI&_nc_zt=23&_nc_ht=scontent.fhan5-11.fna&_nc_ss=7b2a8&oh=03_Q7cD5gFCNZCC_EJui7RTf9enp0KzvLCmzs37Recm6WgekecrkQ&oe=6A4E16AE" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-10.fna.fbcdn.net/v/t1.15752-9/716009895_1841960666762900_6033983678723522208_n.jpg?stp=dst-jpg_tt6&cstp=mx2689x4034&ctp=s2048x2048&_nc_cat=101&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeEQA9FfzmfsQvaR6shrTGmhD1r4X4nh_KYPWvhfieH8pjBEYJ9iPddQpDtJP0EEUhvxg_zlkyIK-EyhXHaGWy8e&_nc_ohc=yRu1JoQx930Q7kNvwErUnvp&_nc_oc=Adon7HBy6QXqFTGn8_QhJLzrk5E1mY_ohtsDjulww-r3-7yncOsRJIJfZF5ZLnNia_M&_nc_zt=23&_nc_ht=scontent.fhan5-10.fna&_nc_ss=7b2a8&oh=03_Q7cD5gGkHazaN1nqOdW3jdnKKBNxVRh3CTceEfHEImvA-J9Tgw&oe=6A4DEC28" alt="Kỷ niệm trái 4">
+            </div> 
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-11.fna.fbcdn.net/v/t1.15752-9/715809885_1010338618109221_6110386988142279811_n.jpg?stp=dst-jpg_tt6&cstp=mx2688x4032&ctp=s2048x2048&_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGoMi3ppNAuatSq_mGEVIyg6jNKSIb9iGDqM0pIhv2IYLuWRbj3_qL84ARuInlNQ8QL-mL9cnNMl9rvZmpfJ-bi&_nc_ohc=gjyl3jRUbUwQ7kNvwGx64o7&_nc_oc=Adq_2eSHot9Zaie2bLcOKt14t97ifrcrLD0-wGlyd-5YSDonfN3TcFKW_WCMTmwjXQg&_nc_zt=23&_nc_ht=scontent.fhan5-11.fna&_nc_ss=7b2a8&oh=03_Q7cD5gHTZn7h-s9p3ge1d-x-LGtHkf81wr1HPMDxIFJPMK-Q1g&oe=6A4DFFAA" alt="Kỷ niệm trái 4">
+            </div>
+        </div>
+
+        <div class="letter">
+		<center>
+            <h2>46 vì tinh tú ✨❤️</h2>
+		</center>
+            <p>
+                GỬI NHỮNG THÀNH VIÊN CỦA K59D1 <br><br>
+                Tơ là Thu Huyền. 3 năm trôi qua tuy không quá dài nhưng đã đủ để lưu lại trong kí ức tơ những điều khó quên.
+Tơ hay nói rằng lớp mình không đoàn kết,tơ sẽ không lụy, muốn nhanh ra khỏi trường... Nhưng giờ đây, đã là buổi học cuối,tơ dần cảm thấy sợ khoảnh khắc chia xa đang gần kề.
+Vậy là từ nay, sẽ không còn những nỗi lo sợ cô Thư kiểm tra bài cũ,không còn những buổi ôn toán của thầy Bảo, không còn được nghe tiếng giảng mạnh mẽ, thấy nụ cười nhếch mép của thầy Nhân.Không còn những trò chơi kiếm điểm cộng trong giờ mẹ Mận. Không còn sợ những tràng sử dài trong ppt của cô Tình. Không còn tiếng “good morning sir”mỗi  khi thầy Tuấn bước vào, không còn những giờ quốc phòng thiếu đồng phục được thầy Nghiêm bỏ qua nữa. Tất cả những khoảnh khắc ấy được trải qua cùng các bạn giờ đây đã biến thành kỉ niệm khó quên trong lòng tơ.
+                <br><br>
+           Có lẽ là sẽ rất khó để K59D1 có thể tụ họp đầy đủ 1 lần nữa, mỗi người đều có một ước mơ, một hành trình một dự định riêng. Mong cho mỗi chúng ta  sẽ luôn tỏa sáng trong cuộc đời của chính mình. Chúc cho 46 vì tinh tú hạnh phúc , khỏe mạnh, vui vẻ, sức khỏe, bình an. Mong các bạn đến phương trời mới sẽ thuận lợi, hòa hợp, sớm giàu nhen.
+                <br><br>
+               Gần thi rồi, lớp mình nhớ đi lại cẩn thận nhé. Có đi chùa đi đền gì cũng chú ý an toan giao thông nha. Chúc các bạn thi tốt, làm bài cẩn thận, bình tĩnh ,tự tin.<br><br>
+                <center><strong>2023-2026</strong><center>
+            </p>
+        </div>
+
+        <div class="image-sidebar">
+            <h3>Kỷ niệm lớp</h3>
+            
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t39.30808-6/717612492_1376660970997314_7267148139115716767_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1670&ctp=s2048x1670&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG8BT3-JH7ivi5HnFTyEbc_oeDR1rxcpOah4NHWvFyk5ndn989N6y6KyAAWPsNmKFB2RGF5HOuntze3iyrU_98S&_nc_ohc=AnGoPimw9Q4Q7kNvwGEq4-R&_nc_oc=Adq6z3p2JwaODplpC_SsLc7tlJTC_d1322acwBpqrqVOuomeZRSH6kWYvADDYkEC2xQ&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_gid=gEVbmdiYUlfWV5xaED33KA&_nc_ss=7b2a8&oh=00_Af_sGQpicuUQZ13TITCcFR7PrL8pNKFRYQWlPTum1KR8lg&oe=6A2C773E" alt="Lễ tri ân K59D1">
+            </div>
+            
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-10.fna.fbcdn.net/v/t39.30808-6/719625206_1376661010997310_324645357123884316_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1535&ctp=s2048x1535&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG6QI0m1RL_LjaXMNmw-Mt_Oz40YbijLi47PjRhuKMuLjinm13gVWEPQ_fsjwv_3p17MPHmpl_HdFk2KvDjMr2r&_nc_ohc=C1HuovLM408Q7kNvwEmdeBi&_nc_oc=Adr1WsR7Z0yxzcCqG-f07vSoa9jsjK8F3sE0Hw5tc6MVSPfCKLVRz-mwiAmBzvJL5YA&_nc_zt=23&_nc_ht=scontent.fhan5-10.fna&_nc_gid=vFA-c9SgNWCZhoY1Le1r9Q&_nc_ss=7b2a8&oh=00_Af_E_rG6x24GtMUkZinACSXf84fJzfWR9KiwcMcLofFggQ&oe=6A2C6F84" alt="Kỷ niệm lớp 1">
+            </div>
+
+            <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-2.fna.fbcdn.net/v/t39.30808-6/719899704_1376660964330648_7804271658784015040_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE3I0mv4oEbZbm8M4vnaUQVLb4lcpRecRYtviVylF5xFq2BEg2HfwGqSzz3vQQQYht-pbCR9DN0xVK-WFDMkXDZ&_nc_ohc=UEetwcrC__gQ7kNvwF4_cKk&_nc_oc=Ado62G1oEnURtGeBNzTrcoSwlp6C6Nhs-iNlYopoI4kJrpYCFfw8-a8eln5xk_BkIaY&_nc_zt=23&_nc_ht=scontent.fhan5-2.fna&_nc_gid=izz0hOTkwS5s4vD20mKeKw&_nc_ss=7b2a8&oh=00_Af80vBouQQZf_PEX7qjrRDC8pCM1ghY0H0twmnHn_V6xjg&oe=6A2C632F" alt="Kỷ niệm lớp 2">
+            </div>
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-6.fna.fbcdn.net/v/t39.30808-6/719574041_1376661207663957_2092188891877774593_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGfKQhqNZDEGey0p4_YU5Q53JDOvyoMYkfckM6_KgxiR1T8jbnR4J1y162XeNrcXdwOCQvJsgiuN_qfqdBSqBzS&_nc_ohc=QHehKx0DfPoQ7kNvwFcUvxD&_nc_oc=AdoIyXqkPF_ulqh2rVblCZmZIATO82fLlMtcpV5OaeJQQWVE5fmvlgb7o2N8E5JJ8fE&_nc_zt=23&_nc_ht=scontent.fhan5-6.fna&_nc_gid=nBYxTnVMNlU_lzoYldsXMQ&_nc_ss=7b2a8&oh=00_Af9Zncou4w7br44CEKieUC4qWklx_amMBJ82ReQrF76F0g&oe=6A2C54A2" alt="Kỷ niệm trái 4">
+            </div>
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-9.fna.fbcdn.net/v/t39.30808-6/719218752_1376661254330619_2882623738476389001_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFai0ubopYjEGetPto2j0FBcrzPhEnrXhByvM-ESeteELOILmjN1WczWrUN4GmPcHVbu4LoW5yy3iY3A2aCL3xl&_nc_ohc=B7rRNj9zZf8Q7kNvwGSGW5m&_nc_oc=AdoPoKjivYJY5QPFr3Gq0FOVbUUjPVZAZ20bnswBqT3W16GYkklBg58Gwa9t2bIFLrA&_nc_zt=23&_nc_ht=scontent.fhan5-9.fna&_nc_gid=d06EwuKrCFq_h8CTfidffA&_nc_ss=7b2a8&oh=00_Af9Mbr-K115MD4baRqSTh7jWjvDJSKqdStJOnDvAkvyigg&oe=6A2C4CC6" alt="Kỷ niệm trái 4">
+            </div>
+			
+			 <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-11.fna.fbcdn.net/v/t1.15752-9/713943101_880316048427386_7621171847790635779_n.jpg?stp=dst-jpg_tt6&cstp=mx2687x4031&ctp=s2048x2048&_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGPMi4JwzMU3Md6wHwpzj4-ejZal1c_lp16NlqXVz-WnX3i75LIJnhNvKcxbs7AY0DJG869AofPi9BndIf0mS6x&_nc_ohc=VFNnMLCc3IEQ7kNvwHLOrUP&_nc_oc=AdqWi7KR880C-reBJa_cnN8CcDlmH-_3z_y2ZOjelQwkRfFwkCM4lw2NLF7_zxEsALY&_nc_zt=23&_nc_ht=scontent.fhan5-11.fna&_nc_ss=7b2a8&oh=03_Q7cD5gH4y6xYD4mUdJfoaqiaenetZJuKveD5owONTvFUJV3MVA&oe=6A4E06B6" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-6.fna.fbcdn.net/v/t1.15752-9/715276125_1208923754601341_7903545935060940323_n.jpg?stp=dst-jpg_tt6&cstp=mx2687x4031&ctp=s2048x2048&_nc_cat=105&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHh1L1OJLsbg7kY1l0ShRrv_qEQhjNJw1H-oRCGM0nDURWT0N7kKArcZJNWopFIicx2ZRRisF9ipyxfoLgsBhep&_nc_ohc=XSZ483c_ktIQ7kNvwEIpyXW&_nc_oc=AdpFEZWidtr8vBF2Vop6Q7F6aZ5XSKG6-6LUnCI4aNZNQqMdBSqwfvKWev4rOQmE_Rw&_nc_zt=23&_nc_ht=scontent.fhan5-6.fna&_nc_ss=7b2a8&oh=03_Q7cD5gH0ME0nDOYjixGEIE2VR3pp9xEZ01i6sAqK2lC_H8F0Jg&oe=6A4DF0F5" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t1.15752-9/715411914_1482182380620045_1959776656779637918_n.jpg?stp=dst-jpg_tt6&cstp=mx2685x4028&ctp=s2048x2048&_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeESy-9XUUtHfCGhzuFqtR1zjc4cjkWQwSaNzhyORZDBJja5QhH91FpoVQ0ImKR_aEQz5GJRG8EsThAkhleeBpjt&_nc_ohc=nqHKbDEoyHkQ7kNvwFg11yd&_nc_oc=AdqEMb6IvFmrkL7-pDthbhovZHeQj5cwu0dZkSaj3vlElVxblki3Oo-B_ewrzrrCGfc&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_ss=7b2a8&oh=03_Q7cD5gGbF1L1iW9Uw5cMe9IYdvnbNfjvp8XNrrUC7CR2R-DbhQ&oe=6A4E1476" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-10.fna.fbcdn.net/v/t1.15752-9/715078170_963841872941517_160412764533541360_n.jpg?stp=dst-jpg_tt6&cstp=mx2689x4034&ctp=s2048x2048&_nc_cat=111&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeH6ETaqNn68Pb3B81DN8lJacfzDE1wqxEtx_MMTXCrES8xtc_L43EX-i5KRMGBBvT4yBVGMWvAdIAcdLU0k0uw3&_nc_ohc=P2-a683QJqMQ7kNvwG5gG8R&_nc_oc=Adoe7QOhrxuc5YPxHQjkE1MJ3IGYIFbhDUv5_RUI3inWfoU2jUIm2o63uFndjUzOwis&_nc_zt=23&_nc_ht=scontent.fhan5-10.fna&_nc_ss=7b2a8&oh=03_Q7cD5gHza3cq-So_ZXrUEJ5g8O3MckSGZdKGOD2lHum1BkFbIg&oe=6A4E0CB5" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-10.fna.fbcdn.net/v/t39.30808-6/720031187_1376687094328035_2468331564580817511_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeF3WGmHw_ZzZjYVOQQmu--eai1Pxl1vfldqLU_GXW9-V6JNBnl0iVJDPCDSKbEEKN7y-HiRNZr1AmKKz3rLMpCk&_nc_ohc=AjB6DFranz4Q7kNvwEiG66d&_nc_oc=Adq-Us43Qf32KlNoppnDXDDcF9Gx-oyLhIzzPWxpYIjot1jY5xiMqYYsDLLFfNqDEqc&_nc_zt=23&_nc_ht=scontent.fhan5-10.fna&_nc_gid=2ksEhAldmDeU_ZfpcuyHpg&_nc_ss=7b2a8&oh=00_Af-e60RPWcshR55mS3SJmiIDL6sdEQwtDhW6AOi1o5Nj_w&oe=6A2C7884" alt="Kỷ niệm trái 4">
+            </div>
+			<div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t1.15752-9/714804934_2893385397675028_8460469946976907364_n.jpg?stp=dst-jpg_tt6&cstp=mx2688x4032&ctp=s2048x2048&_nc_cat=108&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGZPKMNQO-Jvl95Qf3rTJMbhvF0B3d_JsqG8XQHd38myvcNg786aqiiWAUVRAo21cTbQLBoym0oyntg6NbUFIK4&_nc_ohc=Z0ZgvLf7-94Q7kNvwHCzWDw&_nc_oc=Adpn-w2hDO3PAJhzkoj3BbskXWKDe_JFmvsIMK6h52SJNXe9DAWXBlG_6KULlnY5afQ&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_ss=7b2a8&oh=03_Q7cD5gHY_mqUJsAxkLjQx4jWfcxIsDANuwqV7oZKXSkGa6MoZA&oe=6A4E1289" alt="Kỷ niệm trái 4">
+            </div> <div class="thumb-box" onclick="zoomImage(this)">
+                <img src="https://scontent.fhan5-2.fna.fbcdn.net/v/t39.30808-6/718702326_1376686724328072_8464941677223925954_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEPlTUMGee4ApeWO2obDB1mzkbys-tW3oXORvKz61behW79z9mEfWXXj1_k5BdMpUxj2qUqDubBj-dIOiK87K_-&_nc_ohc=I10W1t17V0EQ7kNvwGvPNnU&_nc_oc=AdqkqV12ht_z7teHbGpq8UKiEFyFap3reElqjd87H-MTbGJemlkOjgPQaCF0NGoN1zQ&_nc_zt=23&_nc_ht=scontent.fhan5-2.fna&_nc_gid=QRSh1B4OOmI6Jv7VA_Ct3w&_nc_ss=7b2a8&oh=00_Af8U0SsCQ2GenbOxJZdV94LNP3fhBUbz5Fd2ebOQfI5RuA&oe=6A2C5571" alt="Kỷ niệm trái 4">
+            </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeZoom()">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Zoomed">
+</div>
+
+<script>
+const audio = document.getElementById('myAudio');
+const disc = document.getElementById('cdDisc');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+function openLetter(){
+    document.getElementById("screen1").classList.add("hide");
+    document.getElementById("mainContent").classList.add("show-layout");
+    
+    audio.play().catch(error => {
+        console.log("Autoplay bị chặn bởi chính sách bảo mật trình duyệt.");
+    });
+}
+
+/* HÀM PHÓNG TO ẢNH CHUNG CHO CẢ HAI BÊN DẢI ẢNH */
+function zoomImage(element) {
+    const imgSrc = element.querySelector('img').src; 
+    lightboxImg.src = imgSrc; 
+    lightbox.classList.add('active'); 
+}
+
+function closeZoom() {
+    lightbox.classList.remove('active');
+}
+
+/* ĐỒNG BỘ ĐĨA XOAY THEO TRẠNG THÁI NHẠC */
+audio.addEventListener('play', () => { disc.style.animationPlayState = 'running'; });
+audio.addEventListener('pause', () => { disc.style.animationPlayState = 'paused'; });
+audio.addEventListener('ended', () => { disc.style.animationPlayState = 'paused'; });
+</script>
+
+</body>
+</html>
